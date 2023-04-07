@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import styled from "styled-components";
 
 const Contact = () => {
@@ -36,6 +37,9 @@ const Contact = () => {
 
   return (
     <Wrapper>
+      <Helmet>
+        <title>Contact</title>
+      </Helmet>
       <h2 className="common-heading">Feel Free to Contact us</h2>
 
       <iframe
@@ -45,14 +49,16 @@ const Contact = () => {
         style={{ border: 0 }}
         allowFullScreen=""
         loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"></iframe>
+        referrerPolicy="no-referrer-when-downgrade"
+      ></iframe>
 
       <div className="container">
         <div className="contact-form">
           <form
             action="https://formspree.io/f/xgedgjkr"
             method="POST"
-            className="contact-inputs">
+            className="contact-inputs"
+          >
             <input
               type="text"
               name="username"
@@ -74,7 +80,8 @@ const Contact = () => {
               cols="30"
               rows="6"
               autoComplete="off"
-              required></textarea>
+              required
+            ></textarea>
 
             <input type="submit" value="send" />
           </form>

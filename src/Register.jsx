@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserContext } from "./App";
+import { Helmet } from "react-helmet";
 
 function Copyright(props) {
   return (
@@ -78,6 +79,9 @@ export default function SignUp() {
   };
   return (
     <ThemeProvider theme={theme}>
+      <Helmet>
+        <title>Register</title>
+      </Helmet>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

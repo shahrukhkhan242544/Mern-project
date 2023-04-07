@@ -2,12 +2,13 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import Navbar from "./Navbar";
 import styled from "styled-components";
+import logo from "../assets/images/vite.svg"; // relative path to image
 
 const Header = () => {
   return (
     <MainHeader>
       <NavLink to="/">
-        <img src="./images/vite.svg" alt="logo" className="logo" />
+        <img src={logo} alt="logo" className="logo" />
       </NavLink>
       <Navbar />
     </MainHeader>

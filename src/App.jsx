@@ -17,6 +17,7 @@ import "./App.css";
 
 import { initialState, reducer } from "./reducer/useReducer";
 import SnackBar from "./SnackBar";
+import ResetPassword from "./ResetPassword";
 
 export const UserContext = createContext();
 const App = () => {
@@ -59,6 +60,17 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot" element={<Forgot />} />
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPassword />}
+              />
+
+              <Route
+                exact
+                path="/reset-password/:id"
+                component={ResetPassword}
+              />
+
               <Route path="/toast" element={<SnackBar />} />
 
               <Route path="*" element={<Error />} />

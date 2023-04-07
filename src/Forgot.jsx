@@ -1,49 +1,71 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-// import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Helmet } from "react-helmet";
 
-// const theme = createTheme();
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function Forgot() {
+  const [open, setOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const navigateTo = useNavigate();
-  // useEffect(() => {
-  //   handleSubmit();
-  // }, []);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
     const items = {
       email: data.get("email"),
-      password: data.get("password"),
+    };
+    const handleClose = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+
+      setOpen(false);
     };
 
-    let result = await fetch("http://localhost:3001/api/v1/users/login", {
-      method: "post",
-      body: JSON.stringify(items),
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
+    let result = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}users/forgotPassword`,
+      {
+        method: "post",
+        body: JSON.stringify(items),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
 
     result = await result.json();
     if (result) {
-      ///console.log(result);
-      localStorage.setItem("user-info", JSON.stringify(result.data.user));
-      navigateTo("/");
+      setOpen(true);
+      setErrorMessage(result.message);
+      //return false;
+      //localStorage.setItem("user-info", JSON.stringify(result.data.user));
+      //navigateTo("/");
     }
   };
 
@@ -58,6 +80,26 @@ export default function Forgot() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <Helmet>
+        <title>Forgot</title>
+      </Helmet>
+
+      <Stack spacing={2} sx={{ width: "100%" }}>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          sx={{ width: "25%" }}
+        >
+          <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+      </Stack>
       <Box
         sx={{
           marginTop: 8,

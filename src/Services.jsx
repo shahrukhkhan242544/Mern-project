@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useGlobalContext } from "./context";
 import { NavLink } from "react-router-dom";
 import { Button } from "./styles/Button";
+import { Helmet } from "react-helmet";
 
 const Services = () => {
   const { services } = useGlobalContext();
@@ -10,6 +11,9 @@ const Services = () => {
 
   return (
     <Wrapper className="section">
+      <Helmet>
+        <title>Services</title>
+      </Helmet>
       <h2 className="common-heading">Our Services</h2>
       <div className="container grid grid-three-column">
         {services.map((curElem) => {

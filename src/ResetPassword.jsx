@@ -1,18 +1,14 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-// import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Helmet } from "react-helmet";
 
 import Stack from "@mui/material/Stack";
@@ -23,69 +19,57 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-import { UserContext } from "./App";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {/* {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."} */}
-    </Typography>
-  );
-}
-
-// const theme = createTheme();
-
-export default function SignIn() {
+export default function ResetPassword() {
   const [open, setOpen] = useState(false);
+  const [statusType, setStatusType] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
-  const { state, dispatch } = useContext(UserContext);
-
+  const params = useParams();
+  let token = "";
+  if (params && params.token) {
+    token = params.token;
+  }
   const navigateTo = useNavigate();
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const data = new FormData(event.currentTarget);
     const items = {
-      email: data.get("email"),
       password: data.get("password"),
+      passwordConfirm: data.get("confirm_password"),
     };
 
-    let result = await fetch("http://localhost:3001/api/v1/users/login", {
-      method: "post",
-      body: JSON.stringify(items),
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
+    // console.log(items);
+    // return false;
+
+    let result = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}users/resetPassword/${token}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(items),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE",
+        },
+      }
+    );
 
     result = await result.json();
-    if (result.status === "fail") {
-      setOpen(true);
-      setErrorMessage(result.message);
-    } else {
-      if (result) {
-        ///console.log(result);
-        dispatch({ type: "USER", payload: result.data.user });
-        localStorage.setItem("user-info", JSON.stringify(result.data.user));
-        navigateTo("/");
-      }
-    }
-  };
 
-  const handleClick = () => {
-    setOpen(true);
+    if (result.status === "fail") {
+      //   alert(result.status);
+      setOpen(true);
+      setStatusType("error");
+      setErrorMessage(result.message);
+      //   navigateTo("/login");
+    } else if (result.status === "success") {
+      //   alert(result.status);
+      setStatusType("success");
+      setOpen(true);
+      setErrorMessage("Password updated successfully.");
+    }
+    //localStorage.setItem("user-info", JSON.stringify(result.data.user));
+    //navigateTo("/");
   };
 
   const handleClose = (event, reason) => {
@@ -104,14 +88,12 @@ export default function SignIn() {
       fontSize: 14,
     },
   };
-
   return (
     <Container component="main" maxWidth="xs">
       <Helmet>
-        <title>Login</title>
+        <title>Reset Password</title>
       </Helmet>
       <CssBaseline />
-      {/* {open ? <Toast opne={open} message={errorMessage} /> : ""} */}
 
       <Stack spacing={2} sx={{ width: "100%" }}>
         <Snackbar
@@ -124,7 +106,11 @@ export default function SignIn() {
           }}
           sx={{ width: "25%" }}
         >
-          <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+          <Alert
+            onClose={handleClose}
+            severity={statusType}
+            sx={{ width: "100%" }}
+          >
             {errorMessage}
           </Alert>
         </Snackbar>
@@ -141,37 +127,35 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography style={styles.heading} component="h1" variant="h5">
-          Sign in
+          Reset Password
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="password"
+            label="Password"
+            name="password"
+            type="password"
+            autoComplete="off"
             autoFocus
             style={styles.heading}
           />
+
           <TextField
             margin="normal"
             required
             fullWidth
-            name="password"
-            label="Password"
+            id="confirm_password"
+            label="Confirm Password"
+            name="confirm_password"
             type="password"
-            id="password"
-            autoComplete="current-password"
+            autoComplete="off"
+            autoFocus
             style={styles.heading}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label={
-              <Typography style={styles.subheading}>Remember me</Typography>
-            }
-          />
+
           <Button
             type="submit"
             fullWidth
@@ -179,23 +163,10 @@ export default function SignIn() {
             sx={{ mt: 3, mb: 2 }}
             style={styles.heading}
           >
-            Sign In
+            Send
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link to="/forgot" variant="body2" style={styles.subheading}>
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link to="/register" variant="body2" style={styles.subheading}>
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
 }
