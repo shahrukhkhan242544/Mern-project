@@ -20,7 +20,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function ResetPassword() {
+  const [disabled, setDisabled] = useState(false);
   const [open, setOpen] = useState(false);
+
   const [statusType, setStatusType] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
   const params = useParams();
@@ -30,6 +32,7 @@ export default function ResetPassword() {
   }
   const navigateTo = useNavigate();
   const handleSubmit = async (event) => {
+    setDisabled(true);
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const items = {
@@ -61,12 +64,22 @@ export default function ResetPassword() {
       setOpen(true);
       setStatusType("error");
       setErrorMessage(result.message);
+      setDisabled(false);
+      //   navigateTo("/login");
+    } else if (result.status === "error") {
+      //   alert(result.status);
+      setOpen(true);
+      setStatusType("error");
+      setErrorMessage(result.message);
+      setDisabled(false);
+
       //   navigateTo("/login");
     } else if (result.status === "success") {
       //   alert(result.status);
       setStatusType("success");
       setOpen(true);
       setErrorMessage("Password updated successfully.");
+      setDisabled(false);
     }
     //localStorage.setItem("user-info", JSON.stringify(result.data.user));
     //navigateTo("/");
@@ -162,6 +175,7 @@ export default function ResetPassword() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             style={styles.heading}
+            disabled={disabled}
           >
             Send
           </Button>

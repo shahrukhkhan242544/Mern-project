@@ -13,6 +13,7 @@ import GoToTop from "./components/GoToTop";
 import Login from "./Login";
 import Register from "./Register";
 import Forgot from "./Forgot";
+import Profile from "./Profile";
 import "./App.css";
 
 import { initialState, reducer } from "./reducer/useReducer";
@@ -70,6 +71,8 @@ const App = () => {
                 path="/reset-password/:id"
                 component={ResetPassword}
               />
+
+              <Route path="/profile/:id" element={<Profile />} />
 
               <Route path="/toast" element={<SnackBar />} />
 

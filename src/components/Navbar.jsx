@@ -29,14 +29,17 @@ const Navbar = () => {
 
   // console.log("user", user);
   let Username = "";
+  let userId = "";
   if (state) {
     const UsernameString = state.name;
+    userId = state._id;
     Username = UsernameString.charAt(0).toUpperCase();
   } else {
     let userInfo = localStorage.getItem("user-info");
     if (userInfo) {
       userInfo = JSON.parse(userInfo);
       const UsernameString = userInfo.name;
+      userId = userInfo._id;
       Username = UsernameString.charAt(0).toUpperCase();
     } else {
       Username = "";
@@ -218,7 +221,9 @@ const Navbar = () => {
           {Username ? (
             <li>
               <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                <Avatar sx={{ bgcolor: deepOrange[500] }}>{Username}</Avatar>
+                <Link to={`/profile/${userId}`}>
+                  <Avatar sx={{ bgcolor: deepOrange[500] }}>{Username}</Avatar>
+                </Link>
                 <Button
                   startDecorator={<LogoutIcon />}
                   onClick={() => Logout()}
@@ -230,10 +235,24 @@ const Navbar = () => {
           ) : (
             <>
               <li>
-                <Link to="/login">Login</Link>
+                <NavLink
+                  className="navbar-link"
+                  onClick={() => setOpenMenu(false)}
+                  to="/login"
+                >
+                  Login
+                </NavLink>
+                {/* <Link to="/login">Login</Link> */}
               </li>
               <li>
-                <Link to="/register">Register</Link>
+                <NavLink
+                  className="navbar-link"
+                  onClick={() => setOpenMenu(false)}
+                  to="/register"
+                >
+                  Register
+                </NavLink>
+                {/* <Link to="/register">Register</Link> */}
               </li>
             </>
           )}

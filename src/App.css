@@ -1,3 +1,6 @@
 .MuiAlert-message.css-1pxa9xg-MuiAlert-message {
   font-size: 12px;
 }
+a.navbar-link.active {
+  color: rgb(132, 144, 255) !important;
+}
