@@ -19,6 +19,8 @@ import "./App.css";
 import { initialState, reducer } from "./reducer/useReducer";
 import SnackBar from "./SnackBar";
 import ResetPassword from "./ResetPassword";
+import Users from "./Users";
+import UserEdit from "./UserEdit";
 
 export const UserContext = createContext();
 const App = () => {
@@ -65,7 +67,6 @@ const App = () => {
                 path="/reset-password/:token"
                 element={<ResetPassword />}
               />
-
               <Route
                 exact
                 path="/reset-password/:id"
@@ -75,6 +76,8 @@ const App = () => {
               <Route path="/profile/:id" element={<Profile />} />
 
               <Route path="/toast" element={<SnackBar />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/user/:id" element={<UserEdit />} />
 
               <Route path="*" element={<Error />} />
             </Routes>

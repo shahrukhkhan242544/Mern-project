@@ -30,9 +30,11 @@ const Navbar = () => {
   // console.log("user", user);
   let Username = "";
   let userId = "";
+  let role = "";
   if (state) {
     const UsernameString = state.name;
     userId = state._id;
+    role = state.role;
     Username = UsernameString.charAt(0).toUpperCase();
   } else {
     let userInfo = localStorage.getItem("user-info");
@@ -40,6 +42,7 @@ const Navbar = () => {
       userInfo = JSON.parse(userInfo);
       const UsernameString = userInfo.name;
       userId = userInfo._id;
+      role = userInfo.role;
       Username = UsernameString.charAt(0).toUpperCase();
     } else {
       Username = "";
@@ -217,6 +220,18 @@ const Navbar = () => {
               Contact
             </NavLink>
           </li>
+
+          {role == "admin" && (
+            <li>
+              <NavLink
+                className="navbar-link"
+                onClick={() => setOpenMenu(false)}
+                to="/users"
+              >
+                Users
+              </NavLink>
+            </li>
+          )}
 
           {Username ? (
             <li>
